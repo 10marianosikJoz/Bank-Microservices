@@ -1,0 +1,174 @@
+version: '3.8'
+
+networks:
+  marjoz:
+    name: "marjoz"
+    driver: "bridge"
+
+services:
+  accountsdb:
+    container_name: accountsdb
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_DATABASE: accountsdb
+    extends:
+      file: common-configuration.yml
+      service: microservice-database-config
+    networks:
+      - marjoz
+
+  loansdb:
+    container_name: loansdb
+    ports:
+      - "3307:3306"
+    environment:
+      MYSQL_DATABASE: loansdb
+    extends:
+      file: common-configuration.yml
+      service: microservice-database-config
+    networks:
+      - marjoz
+
+  cardsdb:
+    container_name: cardsdb
+    ports:
+      - "3308:3306"
+    environment:
+      MYSQL_DATABASE: cardsdb
+    extends:
+      file: common-configuration.yml
+      service: microservice-database-config
+    networks:
+      - marjoz
+
+  configserver:
+    image: "marjoz/configserver:latest"
+    container_name: config-server-microservice
+    ports:
+      - "8071:8071"
+    healthcheck:
+      test: "curl --fail --silent localhost:8071/actuator/health/readiness | grep UP || exit 1"
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    extends:
+      file: common-configuration.yml
+      service: microservice-base-configuration
+    networks:
+      - marjoz
+
+  servicediscovery:
+    image: "marjoz/servicediscovery:latest"
+    container_name: service-discovery-microservice
+    ports:
+      - "8761:8761"
+    environment:
+      SPRING_APPLICATION_NAME: "servicediscovery"
+    healthcheck:
+      test: "curl --fail --silent localhost:8761/actuator/health/readiness | grep UP || exit 1"
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    extends:
+      file: common-configuration.yml
+      service: microservice-configserver-configuration
+    networks:
+      - marjoz
+
+  account:
+    image: "marjoz/account:latest"
+    container_name: account-microservice
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_APPLICATION_NAME: "account"
+      SPRING_DATASOURCE_URL: "jdbc:mysql://accountsdb:3306/accountsdb"
+    healthcheck:
+      test: "curl --fail --silent localhost:8080/actuator/health/readiness | grep UP || exit 1"
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    depends_on:
+      accountsdb:
+        condition: service_healthy
+      configserver:
+        condition: service_healthy
+    extends:
+      file: common-configuration.yml
+      service: microservice-servicediscovery-configuration
+    networks:
+      - marjoz
+
+  card:
+    image: "marjoz/card:latest"
+    container_name: card-microservice
+    ports:
+      - "9000:9000"
+    environment:
+      SPRING_APPLICATION_NAME: "card"
+      SPRING_DATASOURCE_URL: "jdbc:mysql://cardsdb:3306/cardsdb"
+    healthcheck:
+      test: "curl --fail --silent localhost:9000/actuator/health/readiness | grep UP || exit 1"
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    depends_on:
+      accountsdb:
+        condition: service_healthy
+      configserver:
+        condition: service_healthy
+    extends:
+      file: common-configuration.yml
+      service: microservice-servicediscovery-configuration
+    networks:
+      - marjoz
+
+  loan:
+    image: "marjoz/loan:latest"
+    container_name: loan-microservice
+    ports:
+      - "8090:8090"
+    environment:
+      SPRING_APPLICATION_NAME: "loan"
+      SPRING_DATASOURCE_URL: "jdbc:mysql://loansdb:3306/loansdb"
+    healthcheck:
+      test: "curl --fail --silent localhost:8090/actuator/health/readiness | grep UP || exit 1"
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    depends_on:
+      accountsdb:
+        condition: service_healthy
+      configserver:
+        condition: service_healthy
+    extends:
+      file: common-configuration.yml
+      service: microservice-servicediscovery-configuration
+    networks:
+      - marjoz
+
+  apigateway:
+    image: "marjoz/apigateway:latest"
+    container_name: api-gateway-microservice
+    ports:
+      - "8072:8072"
+    environment:
+      SPRING_APPLICATION_NAME: "apigateway"
+    depends_on:
+      account:
+        condition: service_healthy
+      loan:
+        condition: service_healthy
+      card:
+        condition: service_healthy
+    extends:
+      file: common-configuration.yml
+      service: microservice-servicediscovery-configuration
+    networks:
+      - marjoz
