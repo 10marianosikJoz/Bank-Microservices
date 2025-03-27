@@ -2,12 +2,12 @@ package com.marjoz.loan.domain
 
 import org.example.com.marjoz.loan.domain.Loan
 import org.example.com.marjoz.loan.domain.LoanRepository
-import java.util.concurrent.atomic.AtomicLong
 
 internal class InMemoryLoanRepository : LoanRepository {
 
-    private val database = mutableMapOf<Long, Loan>()
-    private val idGenerator = AtomicLong()
+    companion object {
+        private val database = mutableMapOf<Long, Loan>()
+    }
 
     internal fun truncate() {
         database.clear()

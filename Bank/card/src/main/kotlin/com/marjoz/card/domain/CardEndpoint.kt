@@ -9,7 +9,6 @@ import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.validation.Valid
 import org.example.com.marjoz.card.domain.dto.CardRequestDto
 import org.example.com.marjoz.card.domain.dto.CardResponseDto
-import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.validation.annotation.Validated
@@ -22,10 +21,6 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("/api/v1/cards")
 @Validated
 internal class CardEndpoint(private val cardFacade: CardFacade) {
-
-    companion object {
-        internal val LOGGER = LoggerFactory.getLogger(CardEndpoint::class.java)
-    }
 
     @Operation(
         summary = "Create Card REST API.",
@@ -83,8 +78,7 @@ internal class CardEndpoint(private val cardFacade: CardFacade) {
         ]
     )
     @GetMapping("/fetch/{customerEmail}")
-    fun fetchCardDetails(@RequestHeader("marjoz-correlation-id") correlationId: String, @PathVariable customerEmail : String) : ResponseEntity<CardResponseDto> {
-        LOGGER.info("Correlation id: $correlationId")
+    fun fetchCardDetails(@PathVariable customerEmail : String) : ResponseEntity<CardResponseDto> {
         val loanDto = cardFacade.fetchCardDetails(customerEmail)
         return ResponseEntity.status(HttpStatus.OK)
             .body(loanDto)

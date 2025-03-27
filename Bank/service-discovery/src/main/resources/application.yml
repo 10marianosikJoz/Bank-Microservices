@@ -6,7 +6,6 @@ spring:
     name: "servicediscovery"
   config:
     import: "optional:configserver:http://localhost:8071/"
-#In config server these properties are already set - consider to remove them
 eureka:
   instance:
     hostname: localhost
@@ -30,3 +29,14 @@ management:
     health:
       probes:
         enabled: true
+  metrics:
+    tags:
+      application: ${spring.application.name}
+
+logging:
+  level:
+    com:
+      marjoz:
+        loan: DEBUG
+  pattern:
+    level: "%5p [${spring.application.name},%X{trace_id},%X{span_id}]"

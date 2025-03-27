@@ -2,6 +2,9 @@ package org.example.com.marjoz.account.domain
 
 import com.marjoz.account.domain.dto.AccountRequestDto
 import com.marjoz.account.domain.dto.AccountResponseDto
+import io.github.resilience4j.bulkhead.annotation.Bulkhead
+import io.github.resilience4j.ratelimiter.annotation.RateLimiter
+import io.github.resilience4j.retry.annotation.Retry
 import org.example.com.marjoz.account.domain.dto.CustomerRequestDto
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.media.Content
@@ -84,11 +87,25 @@ internal class AccountEndpoint(private val accountFacade: AccountFacade) {
             )
         ]
     )
-    @GetMapping("/fetch/{email}")
-    fun fetchAccountDetails(@PathVariable email : String) : ResponseEntity<AccountResponseDto> {
+    @RateLimiter(name = "fetchAccountDetails", fallbackMethod = "fetchAccountDetailsLimiterFallback")
+    @Retry(name = "fetchAccountDetails", fallbackMethod = "fetchAccountDetailsRetryFallback")
+    @GetMapping("/fetch/details")
+    fun fetchAccountDetails(@RequestParam email : String) : ResponseEntity<AccountResponseDto> {
         val customerDto = accountFacade.fetchAccountDetails(email)
         return ResponseEntity.status(HttpStatus.OK)
                              .body(customerDto)
+    }
+
+    private fun fetchAccountDetailsRetryFallback(throwable: Throwable): ResponseEntity<AccountResponseDto> {
+        LOGGER.info("fetchAccountDetailsRetryFallback")
+        return ResponseEntity.status(HttpStatus.OK)
+            .body(AccountResponseDto(1, "unknown", "unknown", "unknown", "unknown"))
+    }
+
+    private fun fetchAccountDetailsLimiterFallback(throwable: Throwable): ResponseEntity<AccountResponseDto> {
+        LOGGER.info("fetchAccountDetailsLimiterFallback")
+        return ResponseEntity.status(HttpStatus.OK)
+            .body(AccountResponseDto(1, "unknown", "unknown", "unknown", "unknown"))
     }
 
     @Operation(
@@ -145,12 +162,17 @@ internal class AccountEndpoint(private val accountFacade: AccountFacade) {
             )
         ]
     )
+    @Bulkhead(name = "fetchCustomerDetails", fallbackMethod = "fetchCustomerDetailsBulkheadFallback")
     @GetMapping("/fetch")
-    fun fetchCustomerDetails(@RequestHeader("marjoz-correlation-id") correlationId: String, @RequestParam email : String) : ResponseEntity<CustomerInformationDto> {
-        LOGGER.info("Correlation id: $correlationId")
-        val customerInformationDto = accountFacade.fetchCustomerInformation(email, correlationId)
+    fun fetchCustomerDetails(@RequestParam email : String) : ResponseEntity<CustomerInformationDto> {
+        val customerInformationDto = accountFacade.fetchCustomerInformation(email)
         return ResponseEntity.status(HttpStatus.OK)
             .body(customerInformationDto)
+    }
+
+    fun fetchCustomerDetailsBulkheadFallback() : ResponseEntity<CustomerInformationDto> {
+        return ResponseEntity.status(HttpStatus.OK)
+            .body(CustomerInformationDto("", "", AccountResponseDto(1, "unknown", "unknown", "unknown", "unknown"), null, null))
     }
 
     @Schema(name = "ErrorDetail",

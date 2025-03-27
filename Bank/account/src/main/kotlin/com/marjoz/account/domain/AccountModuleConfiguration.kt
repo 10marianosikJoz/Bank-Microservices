@@ -1,5 +1,6 @@
 package org.example.com.marjoz.account.domain
 
+import org.springframework.cloud.stream.function.StreamBridge
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
@@ -7,21 +8,22 @@ import org.springframework.context.annotation.Configuration
 internal class AccountModuleConfiguration {
 
     @Bean
-    fun accountFacade(accountRepository: AccountRepository,
-                      customerRepository: CustomerRepository,
-                      loanFeignClient: LoanFeignClient,
-                      cardFeignClient: CardFeignClient) : AccountFacade {
+    internal fun accountFacade(accountRepository: AccountRepository,
+                               customerRepository: CustomerRepository,
+                               loanFeignClient: LoanFeignClient,
+                               cardFeignClient: CardFeignClient,
+                               streamBridge: StreamBridge) : AccountFacade {
 
-        return AccountFacade(accountRepository, customerRepository, loanFeignClient, cardFeignClient)
+        return AccountFacade(accountRepository, customerRepository, loanFeignClient, cardFeignClient, streamBridge)
     }
 
     @Bean
-    fun LoanFeignFallback() : LoanFeignFallback {
+    internal fun loanFeignFallback() : LoanFeignFallback {
         return LoanFeignFallback()
     }
 
     @Bean
-    fun CardFeignFallback() : CardFeignFallback {
+    internal fun cardFeignFallback() : CardFeignFallback {
         return CardFeignFallback()
     }
 }

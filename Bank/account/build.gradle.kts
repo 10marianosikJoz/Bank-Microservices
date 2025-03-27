@@ -38,10 +38,14 @@ dependencies {
     implementation("org.springframework.cloud:spring-cloud-starter-netflix-eureka-client")
     implementation("org.springframework.cloud:spring-cloud-starter-openfeign")
     implementation("org.springframework.cloud:spring-cloud-starter-circuitbreaker-resilience4j")
+    implementation("org.springframework.cloud:spring-cloud-stream")
+    implementation("org.springframework.cloud:spring-cloud-stream-binder-kafka")
+    implementation("io.micrometer:micrometer-registry-prometheus:1.14.5")
 
     developmentOnly("org.springframework.boot:spring-boot-devtools")
 
     runtimeOnly("com.mysql:mysql-connector-j")
+    runtimeOnly("io.opentelemetry.javaagent:opentelemetry-javaagent:2.11.0")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")

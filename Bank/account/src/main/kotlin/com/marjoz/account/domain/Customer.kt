@@ -19,4 +19,3 @@ internal data class Customer(@Id
 
     internal constructor(name: String, email: String, address: String) : this(0, name, email, address)
 }
-

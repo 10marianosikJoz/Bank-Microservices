@@ -13,5 +13,3 @@ internal fun Card.toCardResponseDto() = CardResponseDto(customerEmail = this.cus
                                                         cardType = this.cardType.name,
                                                         totalLimit = this.totalLimit,
                                                         availableAmount = this.availableAmount)
-
-

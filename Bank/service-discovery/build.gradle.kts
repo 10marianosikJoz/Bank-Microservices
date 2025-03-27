@@ -26,11 +26,15 @@ repositories {
 extra["springCloudVersion"] = "2024.0.0"
 
 dependencies {
-    testImplementation("org.springframework.boot:spring-boot-starter-test")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springframework.cloud:spring-cloud-starter-config")
     implementation("org.springframework.cloud:spring-cloud-starter-netflix-eureka-server")
     implementation("org.springframework.cloud:spring-cloud-function-context:4.2.1")
+    implementation("io.micrometer:micrometer-registry-prometheus:1.14.5")
+
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
+
+    runtimeOnly("io.opentelemetry.javaagent:opentelemetry-javaagent:2.11.0")
 
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }

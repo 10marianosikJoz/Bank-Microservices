@@ -13,11 +13,17 @@ internal class SqlAccountRepository(private val accountJpaRepository: AccountJpa
     override fun findByCustomerId(id: Long) : Account? {
         return accountJpaRepository.findByCustomerId(id)
     }
+
+    override fun findByAccountNumber(accountNumber: Long): Account? {
+        return accountJpaRepository.findByAccountNumber(accountNumber)
+    }
 }
 
 internal interface AccountRepository {
 
     fun findByCustomerId(id: Long) : Account?
+
+    fun findByAccountNumber(accountNumber : Long) : Account?
 
     fun save(account: Account) : Account
 }
@@ -25,4 +31,6 @@ internal interface AccountRepository {
 internal interface AccountJpaRepository : JpaRepository<Account, Long> {
 
     fun findByCustomerId(id: Long) : Account?
+
+    fun findByAccountNumber(accountNumber : Long) : Account?
 }

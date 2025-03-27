@@ -8,15 +8,15 @@ plugins {
     kotlin("plugin.jpa") version "1.9.25"
 }
 
+group = "com.marjoz"
+archivesName = "loan"
+version = "0.0.1-SNAPSHOT"
+
 java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(21)
     }
 }
-
-group = "com.marjoz"
-archivesName = "loan"
-version = "0.0.1-SNAPSHOT"
 
 repositories {
     mavenCentral()
@@ -36,10 +36,12 @@ dependencies {
     implementation("org.springframework.cloud:spring-cloud-function-context:4.2.1")
     implementation("org.springframework.cloud:spring-cloud-starter-netflix-eureka-client")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
+    implementation("io.micrometer:micrometer-registry-prometheus:1.14.5")
 
     developmentOnly("org.springframework.boot:spring-boot-devtools")
 
     runtimeOnly("com.mysql:mysql-connector-j")
+    runtimeOnly("io.opentelemetry.javaagent:opentelemetry-javaagent:2.11.0")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")

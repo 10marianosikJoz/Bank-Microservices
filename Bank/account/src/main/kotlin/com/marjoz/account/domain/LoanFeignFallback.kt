@@ -6,7 +6,7 @@ import org.springframework.http.ResponseEntity
 
 internal class LoanFeignFallback : LoanFeignClient {
 
-    override fun fetchLoanDetails(correlationId: String, customerEmail: String): ResponseEntity<LoanResponseDto> {
+    override fun fetchLoanDetails(customerEmail: String): ResponseEntity<LoanResponseDto> {
         return ResponseEntity.status(HttpStatus.CREATED).body(LoanResponseDto("","", "", 1))
     }
 }

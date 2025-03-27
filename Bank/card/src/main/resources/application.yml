@@ -1,5 +1,6 @@
 server:
   port: 9000
+
 spring:
   application:
     name: "card"
@@ -36,6 +37,9 @@ management:
   info:
     env:
       enabled: true
+  metrics:
+    tags:
+      application: ${spring.application.name}
 
 eureka:
   instance:
@@ -44,7 +48,7 @@ eureka:
     fetchRegistry: true
     registerWithEureka: true
     serviceUrl:
-      defaultZone: http://localhost:8761/eureka/
+      defaultZone: http://host.docker.internal:8761/eureka/
 
 info:
   app:
@@ -57,3 +61,5 @@ logging:
     com:
       marjoz:
         card: DEBUG
+  pattern:
+    level: "%5p [${spring.application.name},%X{trace_id},%X{span_id}]"

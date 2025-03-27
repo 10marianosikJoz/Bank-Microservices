@@ -21,7 +21,17 @@ spring:
     openfeign:
       circuitbreaker:
         enabled: true
-
+    stream:
+      bindings:
+        updateCommunication-in-0:
+          destination: communication-sent
+          group: ${spring.application.name}
+        publishNotification-out-0:
+          destination: send-communication
+      kafka:
+        binder:
+          brokers:
+            - localhost:9092
 management:
   endpoints:
     web:
@@ -34,13 +44,16 @@ management:
       enabled: true
   endpoint:
     shutdown:
-      enabled: true
+      access: unrestricted
     health:
       probes:
         enabled: true
   info:
     env:
       enabled: true
+  metrics:
+    tags:
+      application: ${spring.application.name}
 
 eureka:
   instance:
@@ -49,7 +62,7 @@ eureka:
     fetchRegistry: true
     registerWithEureka: true
     serviceUrl:
-      defaultZone: http://localhost:8761/eureka/
+      defaultZone: http://host.docker.internal:8761/eureka/
 
 info:
   app:
@@ -62,6 +75,8 @@ logging:
     com:
       marjoz:
         account: DEBUG
+  pattern:
+    level: "%5p [${spring.application.name},%X{trace_id},%X{span_id}]"
 
 resilience4j.circuitbreaker:
   configs:
@@ -70,3 +85,31 @@ resilience4j.circuitbreaker:
       permittedNumberOfCallsInHalfOpenState: 2
       failureRateThreshold: 50
       waitDurationInOpenState: 10000
+
+resilience4j.retry:
+  configs:
+    default:
+      maxAttempts: 3
+      waitDuration: 500
+      enableExponentialBackoff: true
+      exponentialBackoffMultiplier: 2
+      ignoreExceptions:
+        - java.lang.NullPointerException
+      retryExceptions:
+        - java.util.concurrent.TimeoutException
+
+resilience4j.ratelimiter:
+  configs:
+    default:
+      timeoutDuration: 1000
+      limitRefreshPeriod: 5000
+      limitForPeriod: 1
+
+resilience4j.bulkhead:
+  configs:
+    default:
+      maxConcurrentCalls: 50
+      maxWaitDuration: 500
+  instances:
+    serviceBulkhead:
+      baseConfig: default

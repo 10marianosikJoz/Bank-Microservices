@@ -5,7 +5,9 @@ import org.example.com.marjoz.card.domain.CardRepository
 
 internal class InMemoryCardRepository : CardRepository {
 
-    private val database = mutableMapOf<Long, Card>()
+    companion object {
+        private val database = mutableMapOf<Long, Card>()
+    }
 
     fun truncate() {
         database.clear()

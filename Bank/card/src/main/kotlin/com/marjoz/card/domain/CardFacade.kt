@@ -12,6 +12,7 @@ class CardFacade internal constructor(private val cardRepository: CardRepository
 
     fun fetchCardDetails(customerEmail: String) : CardResponseDto {
         val card = cardRepository.findByCustomerEmail(customerEmail) ?: throw CardDomainException("Card with customer email: $customerEmail does not exist.")
+
         return card.toCardResponseDto()
     }
 
@@ -27,6 +28,7 @@ class CardFacade internal constructor(private val cardRepository: CardRepository
 
     fun deleteCard(customerEmail: String) {
         val card = cardRepository.findByCustomerEmail(customerEmail) ?: throw CardDomainException("Card with customer email: $customerEmail does not exist.")
+
         cardRepository.deleteById(card.cardId)
     }
 }

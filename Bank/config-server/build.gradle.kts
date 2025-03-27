@@ -26,9 +26,12 @@ repositories {
 extra["springCloudVersion"] = "2024.0.0"
 
 dependencies {
-    implementation("org.springframework.cloud:spring-cloud-config-server:4.2.0")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
+    implementation("org.springframework.cloud:spring-cloud-config-server:4.2.0")
     implementation("org.springframework.cloud:spring-cloud-function-context:4.2.1")
+    implementation("io.micrometer:micrometer-registry-prometheus:1.14.5")
+
+    runtimeOnly("io.opentelemetry.javaagent:opentelemetry-javaagent:2.11.0")
 }
 
 dependencyManagement {

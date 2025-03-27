@@ -9,7 +9,6 @@ import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.validation.Valid
 import org.example.com.marjoz.loan.domain.dto.LoanRequestDto
 import org.example.com.marjoz.loan.domain.dto.LoanResponseDto
-import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.validation.annotation.Validated
@@ -22,10 +21,6 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("/api/v1/loans")
 @Validated
 internal class LoanEndpoint(private val loanFacade: LoanFacade) {
-
-    companion object {
-        internal val LOGGER = LoggerFactory.getLogger(LoanEndpoint::class.java)
-    }
 
     @Operation(
         summary = "Create Loan REST API.",
@@ -84,8 +79,7 @@ internal class LoanEndpoint(private val loanFacade: LoanFacade) {
         ]
     )
     @GetMapping("/fetch/{customerEmail}")
-    fun fetchLoanDetails(@RequestHeader("marjoz-correlation-id") correlationId: String, @PathVariable customerEmail : String) : ResponseEntity<LoanResponseDto> {
-        LOGGER.info("Correlation id: $correlationId")
+    fun fetchLoanDetails(@PathVariable customerEmail : String) : ResponseEntity<LoanResponseDto> {
         val loanDto = loanFacade.fetchLoanDetails(customerEmail)
         return ResponseEntity.status(HttpStatus.OK)
                              .body(loanDto)

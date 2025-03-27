@@ -1,3 +1,6 @@
+server:
+  port: 8071
+
 spring:
   application:
     name: "configserver"
@@ -27,9 +30,17 @@ management:
     health:
       probes:
         enabled: true
+  metrics:
+    tags:
+      application: ${spring.application.name}
+
+logging:
+  level:
+    com:
+      marjoz:
+        account: DEBUG
+  pattern:
+    level: "%5p [${spring.application.name},%X{trace_id},%X{span_id}]"
 
 encrypt:
-  key: "88D81EC1EF61DF9AD8D3E5BB395Y9"
-
-server:
-  port: 8071
+  key: #example

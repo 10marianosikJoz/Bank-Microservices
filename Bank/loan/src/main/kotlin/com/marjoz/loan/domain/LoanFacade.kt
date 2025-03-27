@@ -28,6 +28,7 @@ class LoanFacade internal constructor(private val loanRepository: LoanRepository
 
     fun deleteLoan(email: String) {
         val loan = loanRepository.findByCustomerEmail(email) ?: throw LoanDomainException("Loan with customer email: $email does not exist.")
+
         loanRepository.deleteById(loan.loanId)
     }
 }

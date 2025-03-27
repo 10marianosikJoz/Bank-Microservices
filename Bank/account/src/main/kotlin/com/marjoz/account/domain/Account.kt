@@ -18,5 +18,3 @@ internal data class Account(@Id
         BUSINESS, PERSONAL
     }
 }
-
-
