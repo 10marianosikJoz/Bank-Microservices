@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Configuration
 internal class LoanModuleConfiguration {
 
     @Bean
-    fun loanFacade(loanRepository: LoanRepository) : LoanFacade {
+    internal fun loanFacade(loanRepository: LoanRepository) : LoanFacade {
         return LoanFacade(loanRepository)
     }
 }

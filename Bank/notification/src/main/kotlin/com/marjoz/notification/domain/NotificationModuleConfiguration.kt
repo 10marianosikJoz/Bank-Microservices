@@ -12,7 +12,7 @@ internal class NotificationModuleConfiguration {
     }
 
     @Bean
-    fun email(): (AccountMessageDto) -> AccountMessageDto {
+    internal fun email(): (AccountMessageDto) -> AccountMessageDto {
         return { accountMessageDto ->
             LOGGER.info("Sending email with the details : $accountMessageDto")
             accountMessageDto
@@ -20,7 +20,7 @@ internal class NotificationModuleConfiguration {
     }
 
     @Bean
-    fun sms(): (AccountMessageDto) -> Long {
+    internal fun sms(): (AccountMessageDto) -> Long {
         return { accountMessageDto ->
             LOGGER.info("Sending sms with the details : $accountMessageDto")
             accountMessageDto.accountNumber

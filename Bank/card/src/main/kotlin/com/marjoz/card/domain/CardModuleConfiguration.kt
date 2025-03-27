@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Configuration
 internal class CardModuleConfiguration {
 
     @Bean
-    fun cardFacade(cardRepository: CardRepository) : CardFacade {
+    internal fun cardFacade(cardRepository: CardRepository) : CardFacade {
         return CardFacade(cardRepository)
     }
 }
