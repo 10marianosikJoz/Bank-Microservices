@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: marjoz-configmap
+data:
+  SPRING_PROFILES_ACTIVE: "production"
+  SPRING_CONFIG_IMPORT: "configserver:http://configserver:8071/"
+  SERVICEDISCOVERY_CLIENT_SERVICEURL_DEFAULTZONE: "http://servicediscovery:8070/eureka/"
+  CONFIGSERVER_APPLICATION_NAME: "configserver"
+  SERVICEDISCOVERY_APPLICATION_NAME: "servicediscovery"
+  ACCOUNT_APPLICATION_NAME: "account"
+  LOAN_APPLICATION_NAME: "loan"
+  CARD_APPLICATION_NAME: "card"
+  GATEWAY_APPLICATION_NAME: "apigateway"
+  KEYCLOAK_ADMIN: "admin"
+  KEYCLOAK_ADMIN_PASSWORD: "admin"
+  SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK-SET-URI: "http://keycloak:7080/realms/master/protocol/openid-connect/certs"

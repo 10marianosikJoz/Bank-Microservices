@@ -1,0 +1,27 @@
+dependencies:
+- name: marjoz-common
+  repository: file://../../marjoz-common
+  version: 0.1.0
+- name: account
+  repository: file://../../marjoz-services/account
+  version: 0.1.0
+- name: apigateway
+  repository: file://../../marjoz-services/apigateway
+  version: 0.1.0
+- name: card
+  repository: file://../../marjoz-services/card
+  version: 0.1.0
+- name: configserver
+  repository: file://../../marjoz-services/configserver
+  version: 0.1.0
+- name: loan
+  repository: file://../../marjoz-services/loan
+  version: 0.1.0
+- name: notification
+  repository: file://../../marjoz-services/notification
+  version: 0.1.0
+- name: servicediscovery
+  repository: file://../../marjoz-services/servicediscovery
+  version: 0.1.0
+digest: sha256:e5d905b4275bfc2aabd379ffdc90f030d42e268c10a9d86d4df4e5abd8f4694e
+generated: "2025-04-01T09:19:32.5531435+02:00"

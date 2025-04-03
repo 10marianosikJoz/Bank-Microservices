@@ -1,0 +1,6 @@
+dependencies:
+- name: marjoz-common
+  repository: file://../../marjoz-common
+  version: 0.1.0
+digest: sha256:c9df0645cfa84ae82d32009eae47b31b58e2231b93cd227527f82b77175e2e75
+generated: "2025-03-31T17:47:38.2915623+02:00"

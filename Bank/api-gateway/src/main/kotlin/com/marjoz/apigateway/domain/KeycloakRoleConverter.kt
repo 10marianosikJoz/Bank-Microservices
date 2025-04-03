@@ -5,7 +5,7 @@ import org.springframework.security. core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.oauth2.jwt.Jwt
 
-internal class KeycloackRoleConverter : Converter<Jwt, Collection<GrantedAuthority>>{
+internal class KeycloakRoleConverter : Converter<Jwt, Collection<GrantedAuthority>>{
 
     override fun convert(source: Jwt): Collection<GrantedAuthority> {
         val roles = (source.claims["realm_access"] as? Map<*, *>)?.get("roles") as? List<*> ?: return emptyList()

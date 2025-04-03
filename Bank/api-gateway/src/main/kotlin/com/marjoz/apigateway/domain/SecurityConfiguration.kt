@@ -46,7 +46,7 @@ internal class SecurityConfiguration {
 
     private fun grantedAuthoritiesExtractor(): Converter<Jwt, Mono<AbstractAuthenticationToken>> {
         val jwtAuthenticationConverter = JwtAuthenticationConverter()
-        jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(KeycloackRoleConverter())
+        jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(KeycloakRoleConverter())
         return ReactiveJwtAuthenticationConverterAdapter(jwtAuthenticationConverter)
     }
 }

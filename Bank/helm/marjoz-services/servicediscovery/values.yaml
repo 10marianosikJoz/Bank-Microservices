@@ -1,0 +1,28 @@
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+deploymentName: servicediscovery-deployment
+serviceName: servicediscovery
+appLabel: servicediscovery
+appName: servicediscovery
+
+replicaCount: 1
+
+image:
+  repository: marjoz/servicediscovery
+  tag: latest
+
+containerPort: 8761
+
+service:
+  type: ClusterIP
+  port: 8761
+  targetPort: 8761
+
+appname_enabled: true
+profile_enabled: false
+config_enabled: true
+eureka_enabled: false
+resouceserver_enabled: false
+otel_enabled: true
+kafka_enabled: false

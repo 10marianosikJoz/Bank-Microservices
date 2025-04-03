@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: servicediscovery-deployment
+  labels:
+    app: servicediscovery
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: servicediscovery
+  template:
+    metadata:
+      labels:
+        app: servicediscovery
+    spec:
+      containers:
+        - name: servicediscovery
+          image: marjoz/servicediscovery:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8761
+          env:
+            - name: SPRING_APPLICATION_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: marjoz-configmap
+                  key: SERVICEDISCOVERY_APPLICATION_NAME
+            - name: SPRING_CONFIG_IMPORT
+              valueFrom:
+                configMapKeyRef:
+                  name: marjoz-configmap
+                  key: SPRING_CONFIG_IMPORT
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: servicediscovery
+spec:
+  selector:
+    app: servicediscovery
+  type: LoadBalancer
+  ports:
+    - protocol: TCP
+      port: 8761
+      targetPort: 8761
